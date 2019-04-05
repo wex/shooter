@@ -28,7 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.dlgSave = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
+            // 
+            // dlgSave
+            // 
+            this.dlgSave.Filter = "PNG|*.png";
             // 
             // frmPicker
             // 
@@ -49,6 +54,8 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.SaveFileDialog dlgSave;
     }
 }
 

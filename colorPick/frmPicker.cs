@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.IO;
 
 namespace colorPick
 {
@@ -58,7 +61,17 @@ namespace colorPick
 
         private void Mask_ShotSelected(object sender, Bitmap e)
         {
-            Clipboard.SetImage(e);
+            if ((ModifierKeys  & Keys.Shift) == Keys.Shift)
+            {
+                dlgSave.ShowDialog();
+                if (dlgSave.FileName.Length > 0)
+                {
+                    e.Save(@dlgSave.FileName, ImageFormat.Png);
+                }
+            } else
+            {
+                Clipboard.SetImage(e);
+            }
 
             CleanUp();
         }
