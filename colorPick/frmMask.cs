@@ -32,8 +32,6 @@ namespace colorPick
         private bool isDrawing = false;
         private bool maybeDraw = false;
 
-        private GraphicsUnit units = GraphicsUnit.Pixel;
-
         private Bitmap zoom = new Bitmap(FULL_ZOOM / ZOOM_MAGN, FULL_ZOOM / ZOOM_MAGN, PixelFormat.Format32bppArgb);
         private Bitmap zoomed = new Bitmap(FULL_ZOOM, FULL_ZOOM, PixelFormat.Format32bppArgb);
         private Graphics gZoom;
@@ -60,7 +58,7 @@ namespace colorPick
         {
             InitializeComponent();
             gZoom = Graphics.FromImage(zoom);
-            gZoom.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            gZoom.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             gZoom.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.AssumeLinear;
             gZoom.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
         }
@@ -96,9 +94,6 @@ namespace colorPick
             Point r = new Point();
             r.X = (a.X < b.X) ? (b.X + 10) : (b.X - 10 - FULL_ZOOM);
             r.Y = (a.Y < b.Y) ? (b.Y + 10) : (b.Y - 10 - FULL_ZOOM);
-
-            //r.X -= HALF_ZOOM * ZOOM_MAGN;
-            //r.Y -= HALF_ZOOM * ZOOM_MAGN;
 
             return r;
         }
@@ -169,11 +164,6 @@ namespace colorPick
             }
         }
 
-        private void frmMask_MouseHover(object sender, EventArgs e)
-        {
-
-        }
-
         private void frmMask_MouseMove(object sender, MouseEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(ModifierKeys);
@@ -193,19 +183,6 @@ namespace colorPick
                 Refresh();
                 drawEnd = e.Location;
             }
-        }
-
-        private void frmMask_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void frmMask_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void frmMask_KeyUp(object sender, KeyEventArgs e)
-        {
         }
     }
 }

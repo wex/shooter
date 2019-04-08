@@ -45,13 +45,9 @@
             this.Text = "frmMask";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Red;
-            this.Load += new System.EventHandler(this.frmMask_Load);
             this.Click += new System.EventHandler(this.frmMask_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmMask_Paint);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMask_KeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMask_KeyUp);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMask_MouseDown);
-            this.MouseHover += new System.EventHandler(this.frmMask_MouseHover);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMask_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmMask_MouseUp);
             this.ResumeLayout(false);

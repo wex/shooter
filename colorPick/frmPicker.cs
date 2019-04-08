@@ -66,7 +66,7 @@ namespace colorPick
                 dlgSave.ShowDialog();
                 if (dlgSave.FileName.Length > 0)
                 {
-                    e.Save(@dlgSave.FileName, ImageFormat.Png);
+                    e.Save(dlgSave.FileName, ImageFormat.Png);
                 }
             } else
             {
