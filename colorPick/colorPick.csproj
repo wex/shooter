@@ -42,7 +42,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\Desktop\Shooter\</OutputPath>
+    <OutputPath>Dist\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -156,6 +156,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icon_mask.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dist\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
