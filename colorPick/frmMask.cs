@@ -23,6 +23,17 @@ namespace colorPick
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int ReleaseDC(IntPtr window, IntPtr dc);
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                // turn on WS_EX_TOOLWINDOW style bit
+                cp.ExStyle |= 0x80;
+                return cp;
+            }
+        }
+
         static int FULL_ZOOM = 128;
         static int HALF_ZOOM = FULL_ZOOM / 2;
         static int ZOOM_MAGN = 4;
@@ -32,13 +43,26 @@ namespace colorPick
         private bool isDrawing = false;
         private bool maybeDraw = false;
 
-        private Bitmap zoom = new Bitmap(FULL_ZOOM / ZOOM_MAGN, FULL_ZOOM / ZOOM_MAGN, PixelFormat.Format32bppArgb);
-        private Bitmap zoomed = new Bitmap(FULL_ZOOM, FULL_ZOOM, PixelFormat.Format32bppArgb);
+        private Bitmap zoom = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+        private Bitmap zoomed = new Bitmap(128, 128, PixelFormat.Format32bppArgb);
         private Graphics gZoom;
-        
+
+        private ColorInfo colorInfo;
 
         private Point drawStart;
         private Point drawEnd;
+
+        private Point localStart;
+        private Point localEnd;
+
+        private Pen maskPen = new Pen(Color.Yellow, 1);
+
+        private Color px;
+
+        internal void AddInfo(ref ColorInfo colorInfo)
+        {
+            this.colorInfo = colorInfo;
+        }
 
         private Rectangle shotRect;
 
@@ -57,10 +81,14 @@ namespace colorPick
         public frmMask()
         {
             InitializeComponent();
+
+            Bitmap icon = Properties.Resources.icon_mask;
+            Icon = Icon.FromHandle(icon.GetHicon());
+
             gZoom = Graphics.FromImage(zoom);
             gZoom.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-            gZoom.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.AssumeLinear;
-            gZoom.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            gZoom.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
+            gZoom.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
         }
 
         private void frmMask_Click(object sender, EventArgs e)
@@ -72,19 +100,25 @@ namespace colorPick
             Rectangle rect = this.DisplayRectangle;
             rect.Width -= 1;
             rect.Height -= 1;
-            e.Graphics.DrawRectangle(new Pen(Color.Yellow, 1), rect);
+
+            e.Graphics.DrawRectangle(maskPen, rect);
 
             if (isZooming)
             {
-                gZoom.CopyFromScreen(drawEnd.X - (HALF_ZOOM / ZOOM_MAGN), drawEnd.Y - (HALF_ZOOM / ZOOM_MAGN), 0, 0, zoom.Size, CopyPixelOperation.SourceCopy);
-                zoomed = new Bitmap(zoom, FULL_ZOOM, FULL_ZOOM);
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                e.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
+                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+
+                gZoom.CopyFromScreen(drawEnd.X - 16, drawEnd.Y - 16, 0, 0, zoom.Size, CopyPixelOperation.SourceCopy);
+                zoomed = new Bitmap(zoom, 160, 160);
+
                 e.Graphics.DrawImage(zoomed, ZoomPoint(drawStart, drawEnd));
                 e.Graphics.DrawRectangle(new Pen(Color.Black, 1), new Rectangle(ZoomPoint(drawStart, drawEnd), zoomed.Size));
             }
 
             if (isDrawing)
             {
-                e.Graphics.DrawRectangle(new Pen(Color.Blue, 1), ShotArea(drawStart, drawEnd));
+                e.Graphics.DrawRectangle(new Pen(Color.Blue, 1), ShotArea(localStart, localEnd));
             }
 
         }
@@ -128,14 +162,16 @@ namespace colorPick
         {
             maybeDraw = true;   
             isDrawing = false;
-            drawStart = e.Location;
+            drawStart = Cursor.Position;
+            localStart = e.Location;
         }
 
         private void frmMask_MouseUp(object sender, MouseEventArgs e)
         {
             if (isDrawing)
             {
-                drawEnd = e.Location;
+                drawEnd = Cursor.Position;
+                localEnd = e.Location;
                 isDrawing = false;
                 Refresh();
                 shotRect = ShotArea(drawStart, drawEnd);
@@ -166,22 +202,47 @@ namespace colorPick
 
         private void frmMask_MouseMove(object sender, MouseEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(ModifierKeys);
             isZooming = ((ModifierKeys & Keys.Alt) == Keys.Alt);
+
+            if (!maybeDraw && !isDrawing)
+            {
+                colorInfo.Left = Cursor.Position.X + 10;
+                colorInfo.Top = Cursor.Position.Y + 10;
+                px = GetColorAt(Cursor.Position.X, Cursor.Position.Y);
+                colorInfo.SetColor(px);
+                colorInfo.Refresh();
+            }
 
             if (maybeDraw)
             {
-                drawEnd = e.Location;
+                drawEnd = Cursor.Position;
+                localEnd = e.Location;
                 if (IsDraw(drawStart, drawEnd))
                 {
                     isDrawing = true;
                     maybeDraw = false;
+                    colorInfo.Visible = false;
+                    maskPen = new Pen(Color.Green, 2);
                 }
             }
+
             if (isDrawing)
             {
                 Refresh();
-                drawEnd = e.Location;
+                drawEnd = Cursor.Position;
+                localEnd = e.Location;
+            }
+        }
+
+        private void frmMask_KeyPress(object sender, KeyPressEventArgs e)
+        {
+        }
+
+        private void frmMask_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Application.Exit();
             }
         }
     }

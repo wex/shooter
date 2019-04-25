@@ -79,6 +79,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorInfo.Designer.cs">
+      <DependentUpon>ColorInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMask.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +99,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ColorInfo.resx">
+      <DependentUpon>ColorInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMask.resx">
       <DependentUpon>frmMask.cs</DependentUpon>
     </EmbeddedResource>
@@ -107,6 +116,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="colorPick_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
@@ -134,6 +144,18 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_camera.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_pipette.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_empty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon_mask.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

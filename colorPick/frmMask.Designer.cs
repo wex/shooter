@@ -42,11 +42,13 @@
             this.Name = "frmMask";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "frmMask";
+            this.Text = "Capture Mask";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Red;
             this.Click += new System.EventHandler(this.frmMask_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmMask_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmMask_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.frmMask_KeyPress);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMask_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMask_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmMask_MouseUp);

@@ -47,6 +47,7 @@
             this.Text = "Shooter";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.Load += new System.EventHandler(this.frmPicker_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPicker_KeyDown);
             this.Move += new System.EventHandler(this.frmPicker_Move);
             this.Resize += new System.EventHandler(this.frmPicker_Resize);
             this.ResumeLayout(false);

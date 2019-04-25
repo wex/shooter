@@ -18,6 +18,8 @@ namespace colorPick
         private Screen screen;
         private List<frmMask> masks = new List<frmMask>();
 
+        private ColorInfo colorInfo;
+
         private Rectangle workspace = new Rectangle(0, 0, 0, 0);
 
         private void resizeMask()
@@ -29,9 +31,20 @@ namespace colorPick
         {
             InitializeComponent();
 
+            Bitmap icon = Properties.Resources.icon_camera;
+            Icon = Icon.FromHandle(icon.GetHicon());
+
+            colorInfo = new ColorInfo
+            {
+                Left = Cursor.Position.X,
+                Top = Cursor.Position.Y
+            };
+            colorInfo.ShowInTaskbar = false;
+            colorInfo.Show();
+            colorInfo.Visible = true;
+
             foreach (Screen t in Screen.AllScreens)
             {
-                Console.WriteLine(t.WorkingArea.Location);
                 var mask = new frmMask
                 {
                     Left = t.WorkingArea.X,
@@ -42,6 +55,8 @@ namespace colorPick
                 
                 mask.ColorSelected += Mask_ColorSelected;
                 mask.ShotSelected += Mask_ShotSelected;
+                mask.ShowInTaskbar = false;
+                mask.AddInfo(ref colorInfo);
                 mask.Show();
                 mask.Visible = false;
 
@@ -104,6 +119,14 @@ namespace colorPick
         private void frmPicker_Resize(object sender, EventArgs e)
         {
 
+        }
+
+        private void frmPicker_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Application.Exit();
+            }
         }
     }
 }
