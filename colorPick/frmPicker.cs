@@ -74,15 +74,39 @@ namespace colorPick
             Application.Exit();
         }
 
+        private byte[] ImageToBytes(Image image)
+        {
+            using (var ms = new MemoryStream())
+            {
+                image.Save(ms, ImageFormat.Jpeg);
+                return ms.ToArray();
+            }
+        }
+
         private void Mask_ShotSelected(object sender, Bitmap e)
         {
-            if ((ModifierKeys  & Keys.Shift) == Keys.Shift)
+            if ((ModifierKeys & Keys.Shift) == Keys.Shift)
             {
                 dlgSave.ShowDialog();
                 if (dlgSave.FileName.Length > 0)
                 {
                     e.Save(dlgSave.FileName, ImageFormat.Png);
                 }
+            } else if ((ModifierKeys & Keys.Alt) == Keys.Alt)
+            {
+                try
+                {
+
+                    var url = Imgur.UploadImage(ImageToBytes(e));
+                    Clipboard.SetText(url);
+
+                } catch (Exception ex)
+                {
+
+                    Clipboard.SetImage(e);
+
+                }
+
             } else
             {
                 Clipboard.SetImage(e);
